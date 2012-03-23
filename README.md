@@ -4,5 +4,5 @@ Usage:
 
 Poor man's testing:
 
-    ./MyFile.py test
+    ./MyFile.py
     ./Password.py

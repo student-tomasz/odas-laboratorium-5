@@ -45,23 +45,22 @@ class MyFile:
 
 if __name__ == '__main__':
     my_file = MyFile()
-    command = sys.argv[1]
-    if len(sys.argv) > 2:
+    if len(sys.argv) >= 4:
+        command = sys.argv[1]
         password = sys.argv[2]
         source_path = sys.argv[3]
-    target_path = None
-    if len(sys.argv) > 4:
-        target_path = sys.argv[4]
-
-    if hasattr(my_file, command):
-        getattr(my_file, command)(password, source_path, target_path)
-    elif command == 'test':
+        target_path = None
+        if len(sys.argv) > 4:
+            target_path = sys.argv[4]
+        if hasattr(my_file, command):
+            getattr(my_file, command)(password, source_path, target_path)
+    else:
         password = 'asd'
-        source_path = 'sample/sample.txt'
+        source_path = 'samples/lorem.txt'
         plain_path = source_path + '.plain'
-        encrypted_path = plain_path + '.encrypted'
-        my_file.encrypt('asd', source_path, encrypted_path)
-        my_file.decrypt('asd', encrypted_path, plain_path)
+        encrypted_path = source_path + '.encrypted'
+        my_file.encrypt(password, source_path, encrypted_path)
+        my_file.decrypt(password, encrypted_path, plain_path)
         if (open(source_path).read().strip() == open(plain_path).read().strip()):
             print 'passed'
         else:
