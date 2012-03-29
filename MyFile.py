@@ -54,6 +54,40 @@ class MyFile:
         for opened_file in [encrypted_file, plain_file]:
             opened_file.close()
 
+    def bruteforce(self, encrypted_path, bruteforced_path = None):
+        encrypted_file = open(encrypted_path, 'rb')
+        if bruteforced_path is None:
+            bruteforced_path = encrypted_path + '.bruteforced'
+        bruteforced_file = open(bruteforced_path, 'wb')
+
+        bruteforced = {}
+        bruteforced_entropies = {}
+
+        salt = encrypted_file.readline().strip()
+        encrypted = encrypted_file.read()
+
+        passwords = []
+        for first in string.ascii_lowercase:
+            for second in string.ascii_lowercase:
+                passwords.append(first+second)
+        # print 'debug: generated passwords'
+
+        for password in passwords:
+            # print 'debug: going over password \'{}\''.format(password)
+            aes = AES.new(Password.new(password, salt).generate_key())
+            decrypted = aes.decrypt(encrypted)
+            bruteforced[password] = decrypted
+            bruteforced_entropies[password] = self.__entropy(decrypted)
+        # print 'debug: bruteforced file for all passwords'
+
+        best_password = min(bruteforced_entropies, key = bruteforced_entropies.get)
+        # print 'debug: found best password'
+        print 'log: best password is \'{}\''.format(best_password)
+        bruteforced_file.write(bruteforced[best_password])
+
+        for opened_file in [encrypted_file, bruteforced_file]:
+            opened_file.close()
+
 
 
 if __name__ == '__main__':
