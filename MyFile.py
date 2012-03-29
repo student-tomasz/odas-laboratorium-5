@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import fileinput, string, sys
+import fileinput, math, string, sys
 from Crypto.Cipher import AES
 import Password
 
@@ -8,6 +8,19 @@ class MyFile:
     def __fill_plain_data(self, data, multiple):
         data += ' ' * (((len(data) / multiple) + 1) * multiple - len(data))
         return data
+
+    def __entropy(self, data):
+        bytes = {}
+        for byte in data:
+            if not byte in bytes:
+                bytes[byte] = 0
+            bytes[byte] += 1
+        for byte in bytes:
+            bytes[byte] = float(bytes[byte]) / float(len(data))
+        entropy = 0
+        for byte in bytes:
+            entropy -= bytes[byte] * math.log(bytes[byte], 2)
+        return entropy
 
     def encrypt(self, password, plain_path, encrypted_path = None):
         plain_file = open(plain_path, 'rb')
