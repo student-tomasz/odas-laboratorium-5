@@ -112,3 +112,14 @@ if __name__ == '__main__':
             print 'passed'
         else:
             print 'failed'
+
+        password = 'ab'
+        source_path = 'samples/lorem.txt'
+        encrypted_path = source_path + '.encrypted'
+        bruteforced_path = source_path + '.bruteforced'
+        my_file.encrypt(password, source_path, encrypted_path)
+        my_file.bruteforce(encrypted_path, bruteforced_path)
+        if (open(source_path, 'rb').read().strip() == open(bruteforced_path, 'rb').read().strip()):
+            print 'passed'
+        else:
+            print 'failed'
