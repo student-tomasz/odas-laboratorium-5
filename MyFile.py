@@ -77,7 +77,7 @@ class MyFile:
             aes = AES.new(Password.new(password, salt).generate_key())
             decrypted = aes.decrypt(encrypted)
             bruteforced[password] = decrypted
-            bruteforced_entropies[password] = self.__entropy(decrypted)
+            bruteforced_entropies[password] = self.__entropy(decrypted[0:30])
         # print 'debug: bruteforced file for all passwords'
 
         best_password = min(bruteforced_entropies, key = bruteforced_entropies.get)
@@ -115,6 +115,28 @@ if __name__ == '__main__':
 
         password = 'ab'
         source_path = 'samples/lorem.txt'
+        encrypted_path = source_path + '.encrypted'
+        bruteforced_path = source_path + '.bruteforced'
+        my_file.encrypt(password, source_path, encrypted_path)
+        my_file.bruteforce(encrypted_path, bruteforced_path)
+        if (open(source_path, 'rb').read().strip() == open(bruteforced_path, 'rb').read().strip()):
+            print 'passed'
+        else:
+            print 'failed'
+
+        password = 'cd'
+        source_path = 'samples/image.jpg'
+        encrypted_path = source_path + '.encrypted'
+        bruteforced_path = source_path + '.bruteforced'
+        my_file.encrypt(password, source_path, encrypted_path)
+        my_file.bruteforce(encrypted_path, bruteforced_path)
+        if (open(source_path, 'rb').read().strip() == open(bruteforced_path, 'rb').read().strip()):
+            print 'passed'
+        else:
+            print 'failed'
+
+        password = 'ef'
+        source_path = 'samples/document.pdf'
         encrypted_path = source_path + '.encrypted'
         bruteforced_path = source_path + '.bruteforced'
         my_file.encrypt(password, source_path, encrypted_path)
